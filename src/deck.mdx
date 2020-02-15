@@ -1,0 +1,365 @@
+import { CodeSurfer } from 'code-surfer'
+import { nightOwl } from '@code-surfer/themes'
+import { Image } from 'mdx-deck'
+
+import "prismjs/components/prism-reason"
+
+export const theme = nightOwl
+
+<Head>
+  <title>Just Give Me a Reason</title>
+  <meta name='twitter:card' content='summary_large_image' />
+  <meta name='twitter:site' content='@ubmit' />
+  <meta name='twitter:title' content='ReasonML' />
+  <meta name='twitter:description' content='Just Give Me a Reason' />
+</Head>
+
+# Just Give Me a Reason
+
+<Notes>
+
+First of all, I would like to have the Pink song playing on the background!
+Ok, I'm going to talk a little bit about ReasonML.
+
+</Notes>
+
+---
+
+## What is ReasonML?
+
+<Notes>
+
+Maybe some of you have never heard about it yet and are probably asking yourselves what is it.
+Hold on a second! I'll explain everything as soon as I finish showing you some amazing things that were built using ReasonML.
+
+</Notes>
+
+___
+
+## Cool stuff built with ReasonML
+
+<Steps>
+
+- Facebook Messenger
+- Fastpack
+- Revery
+- Onivim 2
+
+</Steps>
+
+<Notes>
+
+As far as I know, Facebook Messenger is 80% (or more) in ReasonML
+
+</Notes>
+
+___
+
+<Image src={require('./assets/images/fastpack.png')} />
+
+<Notes>
+
+The numbers speak for themselves! This is incredibly fast!
+
+</Notes>
+
+---
+
+<Image src={require('./assets/images/revery.png')} />
+
+<Notes>
+
+It is amazing how many platforms you can reach using Revery
+
+</Notes>
+
+___
+
+<Image src={require('./assets/images/onivim-2.png')} />
+
+<Notes>
+
+Onivim 2 is powered by Revery - and compiled to native code. Under the hood, it uses libvim for an authentic Vim modal editing experience.
+
+</Notes>
+
+___
+
+## What is ReasonML?
+
+Again...
+
+<Notes>
+
+Here we are again! So, according to the official docs:
+Reason is not a new language; it's a new syntax and toolchain powered by the battle-tested language, OCaml.
+Reason gives OCaml a familiar syntax geared toward JavaScript programmers, and caters to the existing NPM/Yarn workflow folks already know.
+
+For me, Reason is a pragmatic language that offers a lot of safety through its type system and immutable data structures, but it also offers escape hatches.
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason title="Immutable data structures"
+let message = "hello";
+let message = "bye";
+
+Js.log(message); // bye
+```
+
+</CodeSurfer>
+
+<Notes>
+
+"Immutable" as in, "doesn't change". Once a binding refers to a value,
+it cannot refer to anything else (unless it explicitly contains a mutable value).
+However, you may create a new binding of the same name which shadows the previous binding;
+from that point onward, the binding will refer to the newly assigned value.
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason title="Immutable data structures"
+type person = {
+  age: int,
+  name: string,
+};
+
+let jorgeMartinez = {age: 900000, name: "Jorge Martinez"};
+```
+
+```reason
+type person = {
+  age: int,
+  name: string,
+};
+
+let jorgeMartinez = {age: 900000, name: "Jorge Martinez"};
+
+let age = 40;
+
+let fixedJorgeMartinez = {...jorgeMartinez, age};
+```
+
+```reason
+// type option('a) = None | Some('a)
+
+type rubberDuck = {
+  color: string,
+  occupation: option(string),
+};
+
+let duck = {color: "purple", occupation: None};
+```
+
+```reason 3
+type rubberDuck = {
+  color: string,
+  mutable occupation: option(string),
+};
+```
+
+```reason
+type rubberDuck = {
+  color: string,
+  mutable occupation: option(string),
+};
+
+duck.occupation = Some("witch");
+
+Js.log(duck) /* { color: "purple", occupation: 'witch' } */;
+```
+
+</CodeSurfer>
+
+<Notes>
+
+By default, a Reason record is immutable. However, if you really want/need to mutate one of its properties,
+you just need to add the `mutable` keyword before the property name.
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason title="Immutable data structures"
+let foo = ref(5);
+foo := 6;
+
+Js.log(foo) /* { contents: 6 } */;
+```
+
+```reason
+type mutableVariable = {mutable contents: int};
+let bar = {contents: 5};
+bar.contents = 6;
+
+Js.log(bar) /* { contents: 6 } */;
+```
+
+```reason
+let baz = ref("smash");
+let hulk = baz^;
+baz := "bros";
+
+Js.log(hulk) /* smash */;
+Js.log(baz^) /* bros */;
+```
+
+</CodeSurfer>
+
+<Notes>
+
+Let-bindings are immutable, but you can wrap it with a ref, which is like a box whose content can change.
+Note that `ref` is simply a syntax sugar!
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason title="Variant"
+type fridayLunch =
+  | Pizza
+  | Barbecue;
+
+let today = Pizza;
+```
+
+```reason
+type fridayLunch =
+  | Pizza
+  | Barbecue;
+
+let today = Pizza;
+
+let message =
+  switch (today) {
+  | Pizza => "we had pizza today!"
+  | Barbecue => "we had barbecue today!"
+  };
+
+Js.log(message) /* we had pizza today*/;
+```
+
+```reason
+let message =
+  switch (today) {
+  | Pizza => "we had pizza today!"
+  | Barbecue => "we had barbecue today!"
+  | Sushi => "we had sushi today!"
+  };
+
+Error: This variant pattern is expected to have type fridayLunch
+       The constructor Sushi does not belong to type fridayLunch
+```
+
+</CodeSurfer>
+
+<Notes>
+
+Note that the compiler will complain about the `Sushi` variant, because it is not expected!
+That is awesome! The compiler knows that this branch is impossible, because the `fridayLunch` type
+does not contain the `Sushi` variant. This will prevent us from writing unnecessary code.
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason title="Variant"
+type result =
+  | Loading
+  | Error(string)
+  | Data(array(string));
+```
+
+```reason
+type result =
+  | Loading
+  | Error(string)
+  | Data(array(string));
+
+let result = Data([|"foo", "bar", "baz"|]);
+
+let data =
+  switch (result) {
+  | Loading => "Loading..."
+  | Error(error) => "Something went wrong: " ++ error
+  | Data([||]) => "Array is empty!"
+  | Data(array) => array->Belt.Array.length->string_of_int ++ " items in the array"
+  };
+
+Js.log(data) /* 3 items in the array */;
+```
+
+</CodeSurfer>
+
+<Notes>
+
+Note that if we change the order between `Data([||])`and `Data(array)` the compiler will complain
+that the match case `Data([||])` is unused!
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason title="Pattern Matching"
+type result =
+  | Loading
+  | Error(string)
+  | Data(array(string));
+
+type status =
+  | Enabled
+  | Disabled;
+```
+
+```reason
+type result =
+  | Loading
+  | Error(string)
+  | Data(array(string));
+
+type status =
+  | Enabled
+  | Disabled;
+
+let getData = (status, result) => {
+  switch (status, result) {
+  | (Enabled, Loading) => "Loading..."
+  | (Enabled, Error(error)) => "Something went wrong: " ++ error
+  | (Enabled, Data([||])) => "Array is empty!"
+  | (Enabled, Data(array)) => array->Belt.Array.length->string_of_int ++ " items in the array"
+  | (Disabled, _) => "Unavailable."
+  };
+};
+
+let data = getData(Disabled, Loading);
+
+Js.log(data) /* Unavailable. */;
+```
+
+</CodeSurfer>
+
+<Notes>
+
+I've already shown some examples of pattern matching, but those were really "simple". I mean,
+most of them were something that would be possible to do using either JS or TS. However, Reason's
+pattern matching really shines when we aren't matching a single Variant each time.
+
+</Notes>
+
+___
+

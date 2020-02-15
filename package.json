@@ -2,13 +2,15 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "start": "mdx-deck deck.mdx",
-    "build": "mdx-deck build deck.mdx",
-    "test": "echo \"there are no tests\""
+    "start": "mdx-deck src/deck.mdx",
+    "build": "mdx-deck build src/deck.mdx"
   },
   "devDependencies": {
+    "@code-surfer/themes": "^3.1.0",
+    "bs-platform": "^7.1.0",
     "code-surfer": "3.1.0",
-    "mdx-deck": "3.0.13"
+    "mdx-deck": "^4.0.0",
+    "prismjs": "^1.19.0"
   },
   "name": "just-give-me-a-reason"
 }
