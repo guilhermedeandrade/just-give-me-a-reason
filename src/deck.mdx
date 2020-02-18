@@ -1,9 +1,13 @@
+import { Image, Head, Notes, Appear } from 'mdx-deck'
 import { CodeSurfer } from 'code-surfer'
 import { nightOwl } from '@code-surfer/themes'
-import { Image } from 'mdx-deck'
 
 import "prismjs/components/prism-reason"
 import "prismjs/components/prism-typescript"
+
+import fastpackImage from './assets/images/fastpack.png'
+import reveryImage from './assets/images/revery.png'
+import onivimImage from './assets/images/onivim-2.png'
 
 export const theme = nightOwl
 
@@ -39,14 +43,14 @@ ___
 
 ## Cool stuff built with ReasonML
 
-<Steps>
-
-- Facebook Messenger
-- Fastpack
-- Revery
-- Onivim 2
-
-</Steps>
+<ul>
+  <Appear>
+  <li>Facebook Messenger</li>
+  <li>Fastpack</li>
+  <li>Revery</li>
+  <li>Onivim 2</li>
+  </Appear>
+</ul>
 
 <Notes>
 
@@ -56,7 +60,7 @@ As far as I know, Facebook Messenger is 80% (or more) in ReasonML
 
 ___
 
-<Image src={require('./assets/images/fastpack.png')} />
+<Image src={fastpackImage} />
 
 <Notes>
 
@@ -66,7 +70,7 @@ The numbers speak for themselves! This is incredibly fast!
 
 ---
 
-<Image src={require('./assets/images/revery.png')} />
+<Image src={reveryImage} />
 
 <Notes>
 
@@ -76,7 +80,7 @@ It is amazing how many platforms you can reach using Revery
 
 ___
 
-<Image src={require('./assets/images/onivim-2.png')} />
+<Image src={onivimImage} />
 
 <Notes>
 
