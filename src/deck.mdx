@@ -3,6 +3,7 @@ import { nightOwl } from '@code-surfer/themes'
 import { Image } from 'mdx-deck'
 
 import "prismjs/components/prism-reason"
+import "prismjs/components/prism-typescript"
 
 export const theme = nightOwl
 
@@ -358,6 +359,66 @@ Js.log(data) /* Unavailable. */;
 I've already shown some examples of pattern matching, but those were really "simple". I mean,
 most of them were something that would be possible to do using either JS or TS. However, Reason's
 pattern matching really shines when we aren't matching a single Variant each time.
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```typescript title="Pattern Matching"
+interface Result {
+  loading: boolean
+  error: string | null
+  data: string[] | null
+}
+
+interface Status {
+  result: Result
+  enabled: boolean
+}
+```
+
+```typescript
+interface Result {
+  loading: boolean
+  error: string | null
+  data: string[] | null
+}
+
+interface Status {
+  result: Result
+  enabled: boolean
+}
+
+function getData({ result, enabled }: Status) {
+  if (!enabled) return 'Unavailable'
+  else {
+    if (result.error) return `Something went wrong: ${result.error}`
+    if (result.loading) return 'Loading...'
+    if (result.data && result.data.length === 0) return 'List is empty!'
+    if (result.data) return `${result.data.length} items in the array`
+  }
+}
+
+const data = getData({
+  result: { loading: true, error: null, data: null },
+  enabled: false
+})
+
+console.log(data) // Unavailable
+```
+
+</CodeSurfer>
+
+
+<Notes>
+
+Note that this is not as clean as the Reason snippet. This is not objectively a bad thing, because
+I'm enforcing a style that is not built into the language. Also note that here I had to do some stuff
+that was not needed in the Reason example. I had to consider the null case for both `error` and `data`,
+because typescript would not let me pass the result object with `loading` only! Another bad thing here
+is that not all the code paths are covered in this example, so this code is not safe!
 
 </Notes>
 
