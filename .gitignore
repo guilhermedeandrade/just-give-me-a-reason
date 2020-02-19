@@ -3,4 +3,5 @@ node_modules
 public
 lib
 .vscode
+.DS_Store
 *.bs.js

@@ -1,5 +1,7 @@
 import { Image, Head, Notes, Appear } from 'mdx-deck'
 import { CodeSurfer, CodeSurferColumns, Step } from 'code-surfer'
+import ReactAudioPlayer from 'react-audio-player';
+
 import { nightOwl } from '@code-surfer/themes'
 import customTheme from './themes/custom-theme'
 
@@ -9,6 +11,8 @@ import "prismjs/components/prism-typescript"
 import fastpackImage from './assets/images/fastpack.png'
 import reveryImage from './assets/images/revery.png'
 import onivimImage from './assets/images/onivim-2.png'
+
+import introAudio from './assets/audios/intro.m4a'
 
 export const themes = [nightOwl, customTheme]
 
@@ -21,6 +25,13 @@ export const themes = [nightOwl, customTheme]
 </Head>
 
 # Just Give Me a Reason
+
+🎷🎷🎷🎷🎷
+
+<ReactAudioPlayer
+  src={introAudio}
+  controls
+/>
 
 <Notes>
 
