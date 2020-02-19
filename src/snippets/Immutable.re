@@ -1,7 +1,7 @@
 let message = "hello";
 let message = "bye";
 
-Js.log(message); // bye
+Js.log(message) /* bye */;
 
 type person = {
   age: int,
@@ -13,6 +13,8 @@ let jorgeMartinez = {age: 900000, name: "Jorge Martinez"};
 let age = 40;
 
 let fixedJorgeMartinez = {...jorgeMartinez, age};
+
+Js.log(fixedJorgeMartinez) /* { age: 40, name: 'Jorge Martinez' } */;
 
 // type option('a) = None | Some('a)
 

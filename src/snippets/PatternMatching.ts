@@ -14,7 +14,7 @@ function getData({ result, enabled }: Status) {
   else {
     if (result.error) return `Something went wrong: ${result.error}`
     if (result.loading) return 'Loading...'
-    if (result.data && result.data.length === 0) return 'List is empty!'
+    if (result.data && result.data.length === 0) return 'Array is empty!'
     if (result.data) return `${result.data.length} items in the array`
   }
 }

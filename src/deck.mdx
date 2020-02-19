@@ -1,6 +1,7 @@
 import { Image, Head, Notes, Appear } from 'mdx-deck'
-import { CodeSurfer } from 'code-surfer'
+import { CodeSurfer, CodeSurferColumns, Step } from 'code-surfer'
 import { nightOwl } from '@code-surfer/themes'
+import customTheme from './themes/custom-theme'
 
 import "prismjs/components/prism-reason"
 import "prismjs/components/prism-typescript"
@@ -9,7 +10,7 @@ import fastpackImage from './assets/images/fastpack.png'
 import reveryImage from './assets/images/revery.png'
 import onivimImage from './assets/images/onivim-2.png'
 
-export const theme = nightOwl
+export const themes = [nightOwl, customTheme]
 
 <Head>
   <title>Just Give Me a Reason</title>
@@ -29,6 +30,26 @@ Ok, I'm going to talk a little bit about ReasonML.
 </Notes>
 
 ---
+
+## Hey there 👋
+
+I'm Guilherme!
+
+Here are some things about me
+
+(feel free to skip this if you are not interested 😂)
+
+<ul>
+  <Appear>
+  <li>currently addicted to smash (Rafael is guilty for this)</li>
+  <li>always thinking about food</li>
+  <li>I've already built more keyboards than I'd like to admit</li>
+  <li>functional programming enthusiast</li>
+  <li>maybe you don't know, but I'm a software engineer <a href="https://moxy.studio/">@MOXY</a></li>
+  </Appear>
+</ul>
+
+___
 
 ## What is ReasonML?
 
@@ -101,6 +122,7 @@ Reason is not a new language; it's a new syntax and toolchain powered by the bat
 Reason gives OCaml a familiar syntax geared toward JavaScript programmers, and caters to the existing NPM/Yarn workflow folks already know.
 
 For me, Reason is a pragmatic language that offers a lot of safety through its type system and immutable data structures, but it also offers escape hatches.
+Also, you can think of OCaml as PT-PT and ReasonML as PT-BR.
 
 </Notes>
 
@@ -112,7 +134,7 @@ ___
 let message = "hello";
 let message = "bye";
 
-Js.log(message); // bye
+Js.log(message) /* bye */;
 ```
 
 </CodeSurfer>
@@ -150,7 +172,15 @@ let jorgeMartinez = {age: 900000, name: "Jorge Martinez"};
 let age = 40;
 
 let fixedJorgeMartinez = {...jorgeMartinez, age};
+
+Js.log(fixedJorgeMartinez) /* { age: 40, name: 'Jorge Martinez' } */;
 ```
+
+</CodeSurfer>
+
+___
+
+<CodeSurfer>
 
 ```reason
 // type option('a) = None | Some('a)
@@ -318,9 +348,11 @@ that the match case `Data([||])` is unused!
 
 ___
 
-<CodeSurfer>
+<CodeSurferColumns sizes={[1,1]}>
 
-```reason title="Pattern Matching"
+<Step>
+
+```reason
 type result =
   | Loading
   | Error(string)
@@ -332,15 +364,6 @@ type status =
 ```
 
 ```reason
-type result =
-  | Loading
-  | Error(string)
-  | Data(array(string));
-
-type status =
-  | Enabled
-  | Disabled;
-
 let getData = (status, result) => {
   switch (status, result) {
   | (Enabled, Loading) => "Loading..."
@@ -356,7 +379,9 @@ let data = getData(Disabled, Loading);
 Js.log(data) /* Unavailable. */;
 ```
 
-</CodeSurfer>
+</Step>
+
+</CodeSurferColumns>
 
 <Notes>
 
@@ -364,13 +389,18 @@ I've already shown some examples of pattern matching, but those were really "sim
 most of them were something that would be possible to do using either JS or TS. However, Reason's
 pattern matching really shines when we aren't matching a single Variant each time.
 
+Trivia: Jordan Walke himself mentioned that Variants and Pattern Matching helped him a lot to figure things out 
+during the first stages of Reason's development.
+
 </Notes>
 
 ___
 
-<CodeSurfer>
+<CodeSurferColumns sizes={[1,1]}>
 
-```typescript title="Pattern Matching"
+<Step>
+
+```typescript 
 interface Result {
   loading: boolean
   error: string | null
@@ -384,23 +414,12 @@ interface Status {
 ```
 
 ```typescript
-interface Result {
-  loading: boolean
-  error: string | null
-  data: string[] | null
-}
-
-interface Status {
-  result: Result
-  enabled: boolean
-}
-
 function getData({ result, enabled }: Status) {
   if (!enabled) return 'Unavailable'
   else {
     if (result.error) return `Something went wrong: ${result.error}`
     if (result.loading) return 'Loading...'
-    if (result.data && result.data.length === 0) return 'List is empty!'
+    if (result.data && result.data.length === 0) return 'Array is empty!'
     if (result.data) return `${result.data.length} items in the array`
   }
 }
@@ -413,8 +432,9 @@ const data = getData({
 console.log(data) // Unavailable
 ```
 
-</CodeSurfer>
+</Step>
 
+</CodeSurferColumns>
 
 <Notes>
 
@@ -427,4 +447,8 @@ is that not all the code paths are covered in this example, so this code is not 
 </Notes>
 
 ___
+
+## Trivia
+
+Pattern matching in JavaScript is already being discuseed as a [proposal](https://github.com/tc39/proposal-pattern-matching)
 
