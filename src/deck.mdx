@@ -42,11 +42,11 @@ Ok, I'm going to talk a little bit about ReasonML.
 
 ---
 
-## Hey there 👋
+## hey there 👋
 
 I'm Guilherme!
 
-Here are some things about me
+here are some things about me
 
 (feel free to skip this if you are not interested 😂)
 
@@ -322,7 +322,7 @@ ___
 
 <CodeSurfer>
 
-```reason title="Variant"
+```reason title="Pattern matching"
 type result =
   | Loading
   | Error(string)
@@ -359,11 +359,9 @@ that the match case `Data([||])` is unused!
 
 ___
 
-<CodeSurferColumns sizes={[1,1]}>
+<CodeSurfer>
 
-<Step>
-
-```reason
+```reason 1:8
 type result =
   | Loading
   | Error(string)
@@ -372,15 +370,14 @@ type result =
 type status =
   | Enabled
   | Disabled;
-```
 
-```reason
 let getData = (status, result) => {
   switch (status, result) {
   | (Enabled, Loading) => "Loading..."
   | (Enabled, Error(error)) => "Something went wrong: " ++ error
   | (Enabled, Data([||])) => "Array is empty!"
-  | (Enabled, Data(array)) => array->Belt.Array.length->string_of_int ++ " items in the array"
+  | (Enabled, Data(array)) =>
+    array->Belt.Array.length->string_of_int ++ " items in the array"
   | (Disabled, _) => "Unavailable."
   };
 };
@@ -390,9 +387,59 @@ let data = getData(Disabled, Loading);
 Js.log(data) /* Unavailable. */;
 ```
 
-</Step>
+```reason 10:20
+type result =
+  | Loading
+  | Error(string)
+  | Data(array(string));
 
-</CodeSurferColumns>
+type status =
+  | Enabled
+  | Disabled;
+
+let getData = (status, result) => {
+  switch (status, result) {
+  | (Enabled, Loading) => "Loading..."
+  | (Enabled, Error(error)) => "Something went wrong: " ++ error
+  | (Enabled, Data([||])) => "Array is empty!"
+  | (Enabled, Data(array)) =>
+    array->Belt.Array.length->string_of_int ++ " items in the array"
+  | (Disabled, _) => "Unavailable."
+  };
+};
+
+let data = getData(Disabled, Loading);
+
+Js.log(data) /* Unavailable. */;
+```
+
+```reason 21:24
+type result =
+  | Loading
+  | Error(string)
+  | Data(array(string));
+
+type status =
+  | Enabled
+  | Disabled;
+
+let getData = (status, result) => {
+  switch (status, result) {
+  | (Enabled, Loading) => "Loading..."
+  | (Enabled, Error(error)) => "Something went wrong: " ++ error
+  | (Enabled, Data([||])) => "Array is empty!"
+  | (Enabled, Data(array)) =>
+    array->Belt.Array.length->string_of_int ++ " items in the array"
+  | (Disabled, _) => "Unavailable."
+  };
+};
+
+let data = getData(Disabled, Loading);
+
+Js.log(data) /* Unavailable. */;
+```
+
+</CodeSurfer>
 
 <Notes>
 
@@ -407,40 +454,29 @@ during the first stages of Reason's development.
 
 ___
 
+## Trivia
+
+Pattern matching in JavaScript is already being discuseed as a [proposal](https://github.com/tc39/proposal-pattern-matching)
+
+___
+
+## Pipe operators
+
 <CodeSurferColumns sizes={[1,1]}>
 
 <Step>
 
-```typescript 
-interface Result {
-  loading: boolean
-  error: string | null
-  data: string[] | null
-}
-
-interface Status {
-  result: Result
-  enabled: boolean
-}
+```reason subtitle="Pipe first"
+0 -> f       == f(0)
+0 -> g(1)    == g(0, 1)
+0 -> h(1, 2) == h(0, 1, 2)
+0 -> Some    == Some(0)
 ```
 
-```typescript
-function getData({ result, enabled }: Status) {
-  if (!enabled) return 'Unavailable'
-  else {
-    if (result.error) return `Something went wrong: ${result.error}`
-    if (result.loading) return 'Loading...'
-    if (result.data && result.data.length === 0) return 'Array is empty!'
-    if (result.data) return `${result.data.length} items in the array`
-  }
-}
-
-const data = getData({
-  result: { loading: true, error: null, data: null },
-  enabled: false
-})
-
-console.log(data) // Unavailable
+```reason subtitle="Pipe forward"
+0 |> f       == f(0)
+0 |> g(1)    == g(1, 0)
+0 |> h(1, 2) == h(1, 2, 0)
 ```
 
 </Step>
@@ -449,17 +485,131 @@ console.log(data) // Unavailable
 
 <Notes>
 
-Note that this is not as clean as the Reason snippet. This is not objectively a bad thing, because
-I'm enforcing a style that is not built into the language. Also note that here I had to do some stuff
-that was not needed in the Reason example. I had to consider the null case for both `error` and `data`,
-because typescript would not let me pass the result object with `loading` only! Another bad thing here
-is that not all the code paths are covered in this example, so this code is not safe!
+|> is usually called 'pipe-forward'. It's a helper function that's used in the wider OCaml community,
+not just ReasonML. It 'injects' the argument on the left as the last argument into the function on the right.
+
+-> is called 'pipe-first', and it's a new syntax sugar that injects the argument on the left into the first
+argument position of the function or data constructor on the right.
+
+Note that -> is specific to BuckleScript i.e. when compiling to JavaScript.
+It's not available when compiling to native and is thus not portable.
 
 </Notes>
 
 ___
 
-## Trivia
+<CodeSurfer>
 
-Pattern matching in JavaScript is already being discuseed as a [proposal](https://github.com/tc39/proposal-pattern-matching)
+```reason 1:5
+type person = {
+  name: string,
+  age: int,
+  weight: option(int),
+};
 
+let validateAge = age => age > 18;
+
+let getAge = person => person.age;
+
+let decode = json =>
+  Json.Decode.{
+    name: json |> field("name", string),
+    age: json |> field("age", int),
+    weight: json |> optional(field("weight", int)),
+  };
+
+let parseData = json => json |> Json.parseOrRaise |> decode;
+
+let data = {| { "name": "Guilherme", "age": 24 } |};
+
+let withoutPipe = validateAge(getAge(parseData(data)));
+
+let withPipeFirst = parseData(data) -> getAge 
+                                    -> validateAge;
+
+let withPipeForward = data |> parseData
+                           |> getAge
+                           |> validateAge
+
+Js.log(withoutPipe) /* true */;
+Js.log(withPipeFirst) /* true */;
+Js.log(withPipeForward) /* true */;
+```
+
+```reason 11:16,18,20
+type person = {
+  name: string,
+  age: int,
+  weight: option(int),
+};
+
+let validateAge = age => age > 18;
+
+let getAge = person => person.age;
+
+let decode = json =>
+  Json.Decode.{
+    name: json |> field("name", string),
+    age: json |> field("age", int),
+    weight: json |> optional(field("weight", int)),
+  };
+
+let parseData = json => json |> Json.parseOrRaise |> decode;
+
+let data = {| { "name": "Guilherme", "age": 24 } |};
+
+let withoutPipe = validateAge(getAge(parseData(data)));
+
+let withPipeFirst = parseData(data) -> getAge 
+                                    -> validateAge;
+
+let withPipeForward = data |> parseData
+                           |> getAge
+                           |> validateAge
+
+Js.log(withoutPipe) /* true */;
+Js.log(withPipeFirst) /* true */;
+Js.log(withPipeForward) /* true */;
+```
+
+```reason 22:34
+type person = {
+  name: string,
+  age: int,
+  weight: option(int),
+};
+
+let validateAge = age => age > 18;
+
+let getAge = person => person.age;
+
+let decode = json =>
+  Json.Decode.{
+    name: json |> field("name", string),
+    age: json |> field("age", int),
+    weight: json |> optional(field("weight", int)),
+  };
+
+let parseData = json => json |> Json.parseOrRaise |> decode;
+
+let data = {| { "name": "Guilherme", "age": 24 } |};
+
+let withoutPipe = validateAge(getAge(parseData(data)));
+
+let withPipeFirst = parseData(data) -> getAge 
+                                    -> validateAge;
+
+let withPipeForward = data |> parseData
+                           |> getAge
+                           |> validateAge
+
+Js.log(withoutPipe) /* true */;
+Js.log(withPipeFirst) /* true */;
+Js.log(withPipeForward) /* true */;
+``` 
+
+</CodeSurfer>
+
+<Notes>
+  I really like the pipe operator because it lets us declare exactly how the data flow is!
+</Notes>

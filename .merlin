@@ -4,6 +4,8 @@ S /Users/guilherme/workspace/personal/just-give-me-a-reason/node_modules/bs-plat
 B /Users/guilherme/workspace/personal/just-give-me-a-reason/node_modules/bs-platform/lib/ocaml
 FLG -nostdlib
 FLG -w +a-4-9-40-41-42-50-102
+S /Users/guilherme/workspace/personal/just-give-me-a-reason/node_modules/@glennsl/bs-json/lib/ocaml
+B /Users/guilherme/workspace/personal/just-give-me-a-reason/node_modules/@glennsl/bs-json/lib/ocaml
 S src/snippets
 B lib/bs/src/snippets
 ####BSB GENERATED: NO EDIT}
