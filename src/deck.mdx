@@ -1,6 +1,8 @@
-import { Image, Head, Notes, Appear } from 'mdx-deck'
+import { Head, Notes, Appear } from 'mdx-deck'
 import { CodeSurfer, CodeSurferColumns, Step } from 'code-surfer'
 import ReactAudioPlayer from 'react-audio-player';
+
+import CenterImage from './components/CenterImage'
 
 import { nightOwl } from '@code-surfer/themes'
 import customTheme from './themes/custom-theme'
@@ -11,6 +13,7 @@ import "prismjs/components/prism-typescript"
 import fastpackImage from './assets/images/fastpack.png'
 import reveryImage from './assets/images/revery.png'
 import onivimImage from './assets/images/onivim-2.png'
+import prettierImage from './assets/images/prettier.png'
 
 import introAudio from './assets/audios/intro.m4a'
 
@@ -94,7 +97,7 @@ As far as I know, Facebook Messenger is 80% (or more) in ReasonML
 
 ___
 
-<Image src={fastpackImage} />
+<CenterImage src={fastpackImage} />
 
 <Notes>
 
@@ -104,7 +107,7 @@ The numbers speak for themselves! This is incredibly fast!
 
 ---
 
-<Image src={reveryImage} />
+<CenterImage src={reveryImage} />
 
 <Notes>
 
@@ -114,7 +117,7 @@ It is amazing how many platforms you can reach using Revery
 
 ___
 
-<Image src={onivimImage} />
+<CenterImage src={onivimImage} />
 
 <Notes>
 
@@ -613,5 +616,176 @@ Js.log(withPipeForward) /* true */;
 </CodeSurfer>
 
 <Notes>
+  Note that I did not need to import the `Json` module I'm using! In this case it comes from an
+  external package called `bs-json`, but this also works for local files.
+
   I really like the pipe operator because it lets us declare exactly how the data flow is!
 </Notes>
+
+___
+
+<CenterImage src={prettierImage} />
+
+<Notes>
+
+Reason has a built-in formatter (refmt), which inspired James Long to develop Prettier
+
+</Notes>
+
+___
+
+<CodeSurfer>
+
+```reason 1 title="Built-in JSX support"
+  <MyComponent foo={bar} />
+  ([@JSX] MyComponent.createElement(~foo=bar, ~children=[], ()));
+```
+
+```reason 2
+  <MyComponent foo={bar} />
+  ([@JSX] MyComponent.createElement(~foo=bar, ~children=[], ()));
+```
+
+```reason 1
+  <div foo={bar}> child1 child2 </div>;
+  ([@JSX] div(~foo=bar, ~children=[child1, child2], ()));
+```
+
+```reason 2
+  <div foo={bar}> child1 child2 </div>;
+  ([@JSX] div(~foo=bar, ~children=[child1, child2], ()));
+```
+
+```reason 1
+  <> child1 child2 </>;
+  ([@JSX] [child1, child2]);
+```
+
+```reason 2
+  <> child1 child2 </>;
+  ([@JSX] [child1, child2]);
+```
+
+```reason 1
+  <MyComponent> foo bar </MyComponent>;
+  ([@JSX] MyComponent.createElement(~children=[foo, bar], ()));
+```
+
+```reason 2
+  <MyComponent> foo bar </MyComponent>;
+  ([@JSX] MyComponent.createElement(~children=[foo, bar], ()));
+```
+
+```reason
+<MyComponent
+  booleanAttribute={true}
+  stringAttribute="string"
+  intAttribute=1
+  forcedOptional=?{Some("hello")}
+  onClick={send(handleClick)}>
+  <div> {ReasonReact.stringToElement("hello")} </div>
+</MyComponent>
+```
+
+</CodeSurfer>
+
+<Notes>
+
+Reason supports JSX out of the box! You don't need Babel or anything else
+
+</Notes>
+
+___
+
+## Don't take type safety for granted!
+
+7/10 of the [Top 10 JavaScript Errors](https://rollbar.com/blog/top-10-javascript-errors/) are type errors!
+
+___
+
+## Things I would also talk about if I had the time...
+
+___
+
+## BuckleScript
+
+<ul>
+  <Appear>
+  <li>Blazing fast compiler!</li>
+  <li>Readable and performant JavaScript output</li>
+  <li>JS inside a <code>.re</code> file using <code>@bs.raw</code></li>
+  <li>Use a JS module inside a <code>.re</code> file with <code>@bs.module</code></li>
+  </Appear>
+</ul>
+
+---
+
+## ReasonReact
+
+<ul>
+  <Appear>
+  <li>ReasonReact components are visually similar to React ones</li>
+  <li>Nice interop with React components</li>
+  <li>Easy to integrate into an existing app</li>
+  <li>Be able to use React as it was initially intended to be</li>
+  </Appear>
+</ul>
+
+___
+
+## Quick interview with Gabriel Rubens
+
+[Gabriel](https://github.com/fakenickels) is CTO [@Astrocoders](https://astrocoders.com/), a Brazilian 🇧🇷 company that is using Reason in production!
+
+___
+
+Se pudestes escolher a maior razão de ter escolhido Reason para desenvolver seus produtos, qual seria? 
+> Bom, o principalmente motivo foi a chance de não usar um sistema de tipos apenas como um linter poderoso mas sim como uma forma de modelar meus programas com estruturas idiomáticas de uma linguagem robusta que ajudam a manter o type safety do programa. Quanto mais regras vc consegue codificar junto ao sistema de tipos da linguagem mais vc ganha em segurança na hora de manter esse código e refatorar sem medo. Junto que Reason garante que o seu código tem 100% type coverage.
+
+___
+
+Poderias relatar sobre como foi o processo de adoção do Reason em sua empresa?
+> O processo começou de forma gradual. Apenas usamos Reason em uma parte crítica do nosso servidor e fizemos interop do código Reason com o código JS, então do ponto de vista dos outros arquivos é como se o Reason nem estivesse lá.
+
+___
+
+Em que tipo de produto é mais fácil perceber os benefícios trazidos pelo Reason?
+> Numa aplicação de UI é muito fácil perceber os benefícios. Geralmente em uma aplicação React unit testing deixa muito a desejar. É posível, mas não é fácil testar as complexidades de uma aplicação web. Com o sistema de tipos de Reason vc acaba ganhando muita segurança e “testes” de graça apenas por usar ele, então a necessidade de unit testing cai dramaticamente já que o compilador já traz muita segurança.
+
+___
+
+Sentes alguma dificuldade para contratar profissionais interessados em trabalhar com Reason?
+> Até que não, programação funcional anda bem em alta até por forte influencia do próprio React, então todo mundo já anda meio interessado em usar funcional
+
+___
+
+O quão complexo é escrever bindings para packages?
+> A ideia é não escrever bindings pra tudo, somente pra o que vai te atender e ir aumentando a partir daí. Um erro comum de quem começa com Reason é tentar fazer bindings extensivos e completos. O que causa um overhead muito grande. Hoje em dia o BuckleScript tem trabalhado bastante em melhorar o interop com JS então não é muito complexo, mas exige uma mudança de mentalidade que um dev JS comum não está acostumado. FFI sempre foi comum para devs de outras linguagens, mas é um tema não muito abordado em JS.
+
+___
+
+Quanto à experiência de desenvolvimento, podes fazer uma breve comparação com a que tinhas ao desenvolver com JS ou TS?
+> Sem dúvidas é muito mais fácil encontrar tooling feito em TS do que em Reason ainda. Mas o ponto forte do Reason é justamente 100% de type coverage e uma linguagem funcional madura. Diferentemente do TS, Reason te garante que seu código está 100% checado pelo compilador e que ele não vai se perder. Isso já é um grande win e faz valer a pena a falta de tooling extensivo ainda.
+
+___
+
+Quanto à qualidade do produto final, notas uma grande diferença ao comparar com o que era alcançado com JS ou TS?
+
+Em que partes ou situações a diferença é mais notável? 
+
+> Sim, a diferença mais notável que não é imediatamente percebida por quem tenta usar Reason é o quão fácil é manter e refatorar uma codebase feita em Reason. A sensação de segurança é incomparável.
+
+___
+
+Como o sistema de tipos do Reason afeta o número de testes que realmente são necessários e a forma que eles são escritos?
+> A quantidade necessária de testes cai drasticamente pq vc consegue codificar no sistema de tipos muitas restrições da sua regra de negócios, por isso os testes acabam podendo focar em coisas mais complexas e não em bobabens tipo garantir que seu componente não vai tentar renderizar um undefined ou que seu reducer não vai aceitar uma action inválida. Ou ainda mais, que seu GraphQL resolver no servidor não vai consumir seu banco de dados de forma incorreta ou retornar um tipo inválido.
+
+___
+
+Achas que faz sentido desenvolver landing pages usando Reason?
+> Sim, sem nenhum problemas. Só que ferramentas como o Gatsby por exemplo foram construídas encima de dynamic typing pq ele faz muita magia por trás pra vc. Não é errado em si, é um tradeoff que vc faz.
+
+___
+
+Como imaginas o ecossistema de Reason daqui a 5 anos?
+> Imagino um tooling fullstack bem maduro e integrado. Como Reason compila tanto pra nativo quanto pra JS vai ser possível manter uma codebase unificada de client e server. Estamos chegando lá!
