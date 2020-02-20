@@ -2,7 +2,7 @@ export default {
   styles: {
     CodeSurfer: {
       code: {
-        fontFamily: 'JetBrains Mono'
+        fontFamily: 'JetBrainsMono, Courier, monospace'
       }
     }
   }
