@@ -5,7 +5,7 @@ function CenterImage({ src }) {
   return (
     <Image
       src={src}
-      style={{ backgroundSize: 'contain', width: '75%', height: '75%' }}
+      style={{ backgroundSize: 'contain', width: '80%', height: '80%' }}
     />
   )
 }
